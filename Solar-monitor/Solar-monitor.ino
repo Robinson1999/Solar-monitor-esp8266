@@ -8,6 +8,8 @@
 QUITE A LOT...
 */
 
+
+
 //all real data
 float solar_current = 0;
 float battery_output_current = 0;
@@ -19,20 +21,18 @@ float V5 = 0;
 float temp1 = 0;
 //high voltage board measurments
 float V5H = 0;
-float temp = 0;
-
-float VAC1 = 0;
-float IAC1 = 0;
-
-float VAC2 = 0;
-float IAC = 0;
+float temp2 = 0;
+//mains side 1
+float VAC1trms = 0;
+float IAC1trms = 0;
+//main side 2
+float VAC2trms = 0;
+float IAC2trms = 0;
 //calculated values
 float AP1 = 0;//aparant power
 float AP2 = 0;
-
 float P1 = 0;//real power
 float P2 = 0;
-
 float PF1 = 0;//power factor
 float PF2 = 0;
 
@@ -53,17 +53,8 @@ unsigned long previousMicrosfast = 0;
 const uint8_t intervalADCslow = 100;  // interval at which to read data (miliseconds)
 const uint8_t intervalADCmedium = 10;  // interval at which to read data (miliseconds)
 const uint16_t intervalADCfast = 500;  // interval at which to read data (microseconds)
-/*
-ADC configuration
-*/
-/*
-Analyzed data
-*/
-float rmsIAC2 = 0;
 
-/*
-Analyzed data
-*/
+
 bool alarm = false;
 
 void setup() {
@@ -81,11 +72,6 @@ void setup() {
 }
 
 void loop() {
-
-	//check connection for thingsboard and wifi, reconnect if needed
-	tbCheckConnection();
-	
-
 	//read adc every interval
 	unsigned long currentMicrosslow = millis();
 	unsigned long currentMicrosmedium = millis();
@@ -102,8 +88,8 @@ void loop() {
 	{
 		ADCslow();
 	}
-	
-	
+	tbCheckConnection();//check connection for thingsboard and wifi, reconnect if needed
+	OTAloop();//check for over the air programming
 	
 	
 	
@@ -127,11 +113,8 @@ void loop() {
 		digitalWrite(led, LOW);
 	}
 
-	OTAloop();//check for over the air programming
+	
 
-	
-	
-	
 }
 
 
